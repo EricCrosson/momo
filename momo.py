@@ -18,6 +18,11 @@ stump.configure(logger)
 motion_dir = '/tmp/motion'
 
 
+def shell_output(command):
+    """Return stdout of specified command in shell."""
+    return subprocess.check_output(command.split()).decode('utf-8')
+
+
 @stump.ret('Determining picture filename', log=logging.DEBUG,
            postfix_only=True)
 def name(pic):
@@ -36,7 +41,7 @@ def ensure_motion_is_running():
     """Start motion if not running and give it a sec to boot up."""
     if not process_running('motion'):
         print('Starting motion')
-        return subprocess.check_output('sudo motion'.split()).decode('utf-8')
+        return shell_output('sudo motion')
 
 
 @stump.put('Killing motion process')
@@ -44,7 +49,7 @@ def kill_motion():
     """Ensure the motion process is not active (blue webcam light off)."""
     if process_running('motion'):
         print('Stopping motion')
-        return subprocess.check_output('sudo killall motion'.split()).decode('utf-8')
+        return shell_output('sudo killall motion')
 
 
 @stump.ret('Locating filenames in motion capture dir matching {pattern}',
@@ -54,6 +59,9 @@ def motion_files(pattern='*'):
 
 
 if __name__ == '__main__':
+
+    # TODO: parse args including api key and target
+    # TODO: parse from config file if args not found
 
     from notifiers.pushbulletnotifier import PushbulletNotifier
     handler = PushbulletNotifier('o.d6KVGP94jqzGR2arn8h4tPtnRNSggur1')
