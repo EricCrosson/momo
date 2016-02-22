@@ -18,6 +18,7 @@ stump.configure(logger)
 motion_dir = '/tmp/motion'
 
 
+@stump.put("Executing command: '{command}'", log=logging.DEBUG)
 def shell_output(command):
     """Return stdout of specified command in shell."""
     return subprocess.check_output(command.split()).decode('utf-8')
@@ -40,7 +41,6 @@ def process_running(name):
 def ensure_motion_is_running():
     """Start motion if not running and give it a sec to boot up."""
     if not process_running('motion'):
-        print('Starting motion')
         return shell_output('sudo motion')
 
 
@@ -48,7 +48,6 @@ def ensure_motion_is_running():
 def kill_motion():
     """Ensure the motion process is not active (blue webcam light off)."""
     if process_running('motion'):
-        print('Stopping motion')
         return shell_output('sudo killall motion')
 
 
@@ -58,28 +57,35 @@ def motion_files(pattern='*'):
     return glob.glob(os.path.join(motion_dir, pattern))
 
 
-if __name__ == '__main__':
-
+def main():
     # TODO: parse args including api key and target
     # TODO: parse from config file if args not found
 
+    api_key = 'o.d6KVGP94jqzGR2arn8h4tPtnRNSggur1'
+    target = 'Erics-iPhone.att.net'
+
     from notifiers.pushbulletnotifier import PushbulletNotifier
-    handler = PushbulletNotifier('o.d6KVGP94jqzGR2arn8h4tPtnRNSggur1')
+    handler = PushbulletNotifier(api_key)
 
     from detectors.nmapdetector import nmapDetector
-    sensor = nmapDetector('Erics-iPhone.att.net')
+    sensor = nmapDetector(target)
 
     while True:
         if not sensor.host_present:
-            ensure_motion_is_running()  # TODO: background
+            ensure_motion_is_running()
             handler.notify(motion_files('*.jpg'))
-            # Clean up motion_dir: discard swfs for room :: todo:
-            # parametrize with handlers
             for swf in motion_files('*.swf'):
-                os.remove(swf)
+                handler.archive(swf)
         else:
+            logger.debug('%s is home -- sleeping', user())
             kill_motion()
             for file in motion_files():
-                os.remove(file)
-            print('Eric is home -- sleeping')
+                try:
+                  os.remove(file)
+                except:
+                    pass
         time.sleep(30)
+
+
+if __name__ == '__main__':
+    main()
