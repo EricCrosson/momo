@@ -1,2 +1,40 @@
-* MOMO
-Motion-Monitor
+* Momo                                                                  :toc:
+   - [[#what-is-momo][What is Momo?]]
+   - [[#installation][Installation]]
+   - [[#usage][Usage]]
+   - [[#license][License]]
+
+** What is Momo?
+
+/Mo/tion /mo/nitor, or abbreviated momo, is a utility to alert you based on
+motion detected on a webcam.
+
+Current supported methods of notification are:
+- [[https://www.pushbullet.com/][Pushbullet]]
+
+Momo uses the [[http://www.lavrsen.dk/foswiki/bin/view/Motion/WebHome][open-source motion]] project to detect movement from a webcam
+stream.
+
+** Installation
+
+Install dependencies:
+
+- install motion
+
+#+BEGIN_SRC bash
+  sudo apt-get install motion
+#+END_SRC
+
+- install python dependencies
+ 
+#+BEGIN_SRC bash
+  pip install -r requirements.txt
+#+END_SRC
+
+** Usage
+
+TODO: determine usage for daemon and debug mode (expose twiddling params for motion)
+
+** License
+
+TODO: GPL this ho
