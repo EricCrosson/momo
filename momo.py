@@ -56,14 +56,14 @@ def motion_files(pattern='*'):
 if __name__ == '__main__':
 
     from notifiers.pushbulletnotifier import PushbulletNotifier
-    handler = PushbulletNotifier()
+    handler = PushbulletNotifier('o.d6KVGP94jqzGR2arn8h4tPtnRNSggur1')
 
     from detectors.nmapdetector import nmapDetector
     sensor = nmapDetector('Erics-iPhone.att.net')
 
     while True:
         if not sensor.host_present:
-            ensure_motion_is_running() # TODO: background
+            ensure_motion_is_running()  # TODO: background
             handler.notify(motion_files('*.jpg'))
             # Clean up motion_dir: discard swfs for room :: todo:
             # parametrize with handlers
