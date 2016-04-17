@@ -1,4 +1,4 @@
 stump==0.12
-psutil
 pushbullet.py
+psutil
 python-nmap

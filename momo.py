@@ -16,20 +16,13 @@ logger = logging.getLogger()
 
 stump.configure(logger)
 
-motion_dir = '/tmp/motion'
+motion_dir = '/motion'
 
 
 @stump.put("Executing command: '{command}'", log=logging.DEBUG)
 def shell_output(command):
     """Return stdout of specified command in shell."""
     return subprocess.check_output(command.split()).decode('utf-8')
-
-
-@stump.ret('Determining picture filename', log=logging.DEBUG,
-           postfix_only=True)
-def name(pic):
-    """Generate a name for the given picture."""
-    return time.strftime("%Y-%m-%d %H:%M")
 
 
 @stump.ret('Is process {name} running?', log=logging.DEBUG, postfix_only=True)
@@ -76,7 +69,7 @@ def main():
             ensure_motion_is_running()
             handler.notify(motion_files('*.jpg'))
             for swf in motion_files('*.swf'):
-                handler.archive(swf)
+                handler.enqueue(swf)
         else:
             logger.debug('Target is home -- sleeping')
             kill_motion()
@@ -85,7 +78,7 @@ def main():
                   os.remove(file)
                 except:
                     pass
-        time.sleep(30)
+        time.sleep(18)
 
 
 if __name__ == '__main__':

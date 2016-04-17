@@ -5,6 +5,9 @@
 from notifiers.notifier import Notifier
 from pushbullet import Pushbullet
 
+import os
+import os.path
+import time
 import stump
 import logging
 import subprocess
@@ -26,20 +29,28 @@ class PushbulletNotifier(Notifier):
         return subprocess.check_output(command.split()).decode('utf-8')
 
 
-    @stump.put('Notifying user of {files}')
+    @stump.ret('Determining picture filename', log=logging.DEBUG,
+               postfix_only=True)
+    def name(self, pic):
+        """Generate a name for the given picture."""
+        return time.strftime("%Y-%m-%d %H:%M")
+
+
+    @stump.put('Notifying usee of {file}')
     def notify(self, files):
-        """Notify connected user of files."""
+        """Notify connected user of file."""
         for file in files:
             with open(file, 'rb') as pic:
-                file_data = self.pb.upload_file(pic, name(pic))
+                file_data = self.pb.upload_file(pic, self.name(pic))
                 push = self.pb.push_file(**file_data)
-            self.archive(file)
+            os.remove(file)
 
 
-    @stump.put('Archiving {file}')
-    def archive(self, file):
+    @stump.put('Enqueuing {file} for archival')
+    def enqueue(self, file):
         """Archive file in specified archive dir."""
         # TODO: differentiate between video files from motion (swf, any
         # others?) and output jpgs (any others?) and handle them appropriately
-        shell_output('cp {file} {target}'.format(file=file,
-                                                 target=self.archive).split())
+        self.shell_output('cp {file} {target}'.format(file=file,
+                                                      target=self.archive))
+        self.shell_output('rm -f {file}'.format(file=file))
