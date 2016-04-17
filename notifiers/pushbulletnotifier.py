@@ -36,7 +36,7 @@ class PushbulletNotifier(Notifier):
         return time.strftime("%Y-%m-%d %H:%M")
 
 
-    @stump.put('Notifying usee of {file}')
+    @stump.put('Notifying usee of {files}')
     def notify(self, files):
         """Notify connected user of file."""
         for file in files:
