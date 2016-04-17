@@ -2,10 +2,11 @@
 # Written by Eric Crosson
 # 2016-02-16
 
-import notifiers.notifier
+from notifiers.notifier import Notifier
 from pushbullet import Pushbullet
 
 import stump
+import logging
 import subprocess
 
 # TODO: document
@@ -39,6 +40,6 @@ class PushbulletNotifier(Notifier):
     def archive(self, file):
         """Archive file in specified archive dir."""
         # TODO: differentiate between video files from motion (swf, any
-        # others?) and output jpgs (any others?)
+        # others?) and output jpgs (any others?) and handle them appropriately
         shell_output('cp {file} {target}'.format(file=file,
                                                  target=self.archive).split())

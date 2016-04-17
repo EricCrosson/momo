@@ -3,6 +3,7 @@
 # 2016-02-09
 
 import os
+import sys
 import time
 import glob
 import psutil
@@ -77,7 +78,7 @@ def main():
             for swf in motion_files('*.swf'):
                 handler.archive(swf)
         else:
-            logger.debug('%s is home -- sleeping', user())
+            logger.debug('Target is home -- sleeping')
             kill_motion()
             for file in motion_files():
                 try:

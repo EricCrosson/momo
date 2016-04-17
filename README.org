@@ -37,4 +37,4 @@ TODO: determine usage for daemon and debug mode (expose twiddling params for mot
 
 ** License
 
-TODO: GPL this ho
+This project is licensed under the [[http://www.gnu.org/licenses/gpl-3.0.html][GPLv3]].

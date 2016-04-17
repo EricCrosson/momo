@@ -1,1 +1,4 @@
 stump==0.12
+psutil
+pushbullet.py
+python-nmap
